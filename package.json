@@ -10,6 +10,8 @@
     "replay": "tsx src/cli.ts replay",
     "list": "tsx src/cli.ts list",
     "serve": "tsx src/cli.ts serve",
+    "test": "tsx --test \"tests/**/*.test.ts\"",
+    "test:unit": "tsx --test tests/template.test.ts tests/policy.test.ts tests/redact.test.ts tests/control.test.ts tests/schema.test.ts tests/compiler.test.ts tests/candidates.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

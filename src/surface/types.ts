@@ -69,6 +69,11 @@ export interface Surface {
   act(action: AgentAction): Promise<void>;
   /** Read text content from a target (for `extract`). */
   read(target: TargetDescriptor): Promise<string | null>;
+  /**
+   * Resolve a target and report WHICH locator candidate matched — a
+   * non-primary hit is the replay engine's UI-drift signal.
+   */
+  resolveWithInfo(target: TargetDescriptor): Promise<{ used: LocatorCandidate } | null>;
   matches(predicate: DetectPredicate): Promise<boolean>;
   screenshot(filePath: string): Promise<void>;
   currentUrl(): string;

@@ -1,7 +1,7 @@
 import type { CapabilityArtifact, Checkpoint, Step } from "../artifact/schema.js";
 import { render } from "../artifact/template.js";
 import type { Surface } from "../surface/types.js";
-import { PlaywrightWebSurface, TargetNotFoundError } from "../surface/playwright.js";
+import { TargetNotFoundError } from "../surface/playwright.js";
 import type { RunLogger } from "../evidence/logger.js";
 import { PolicyEngine, RiskyActionError } from "../safety/policy.js";
 import type { EscalationManager } from "../escalation/handoff.js";
@@ -26,7 +26,7 @@ export type ReplayResult =
 export async function replay(opts: {
   artifact: CapabilityArtifact;
   params: Record<string, string>;
-  surface: PlaywrightWebSurface;
+  surface: Surface;
   logger: RunLogger;
   policy: PolicyEngine;
   escalation?: EscalationManager; // present => escalation path enabled (headed browser)

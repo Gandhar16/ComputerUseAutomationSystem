@@ -87,6 +87,16 @@ npm run serve  # http://localhost:4700
 
 Every run writes evidence to `evidence/<runId>/` — a structured `run.jsonl` (decisions, actions, policy verdicts) plus screenshots at each step and on failure.
 
+## Tests
+
+```bash
+npm test           # full suite: unit + integration (hosts the target app in-process, drives real Chromium)
+npm run test:unit  # fast: schema, compiler, policy, redaction, control gate, locator ranking
+npm run typecheck
+```
+
+Coverage focuses where it counts: the artifact schema/compiler (param lifting, post-goal truncation, checkpoint derivation), the policy engine (allowlist, risky one-shot permits), redaction, the control-transfer state machine, locator candidate ranking, and an end-to-end replay against the live app (success, business outcome, input validation).
+
 ## Layout
 
 ```
@@ -103,4 +113,5 @@ src/catalog/         agent-facing capability catalog (HTTP; stretch goal)
 src/evidence/        structured run logger + screenshots
 capabilities/        saved capability artifacts (JSON)
 evidence/            per-run logs and screenshots
+tests/               unit + integration tests (node:test via tsx)
 ```

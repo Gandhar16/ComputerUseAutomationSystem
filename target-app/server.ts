@@ -12,11 +12,12 @@
  *   - ?inject=expire          -> session expires after the next page load
  */
 import express from "express";
+import { pathToFileURL } from "node:url";
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 
-const PORT = 4173;
+export const PORT = 4173;
 
 // ---------- state ----------
 interface Session {
@@ -307,6 +308,18 @@ New account number: <b id="ctl00_cph_lblAcct">${num}</b><br><br>
 </td></tr></table>`, { notice: popNotice(s) }));
 });
 
-app.listen(PORT, () => {
-  console.log(`LegacyCU running at http://localhost:${PORT}  (sign on: demo / demo123)`);
-});
+/** Start the app; resolves once listening. Exported so tests can host it in-process. */
+export function startTargetApp(): Promise<import("node:http").Server> {
+  return new Promise((resolve, reject) => {
+    const server = app.listen(PORT, () => {
+      console.log(`LegacyCU running at http://localhost:${PORT}  (sign on: demo / demo123)`);
+      resolve(server);
+    });
+    server.on("error", reject);
+  });
+}
+
+// auto-start only when run directly (npm run target-app), not when imported
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  startTargetApp().catch((e) => { console.error(e); process.exit(1); });
+}
