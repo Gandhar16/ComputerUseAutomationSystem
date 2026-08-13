@@ -1,7 +1,0 @@
-{"ts":"2026-08-13T21:09:36.616Z","event":"replay.start","capability":"lookup-member-balance","version":1,"params":{"memberId":"99999"}}
-{"ts":"2026-08-13T21:09:37.276Z","event":"replay.step","stepIndex":0,"verb":"type","description":"Type into 'Operator ID:' field (credential)","note":"ok (no checkpoint)"}
-{"ts":"2026-08-13T21:09:37.594Z","event":"replay.step","stepIndex":1,"verb":"type","description":"Type into 'Password:' field (sensitive)","note":"ok (no checkpoint)"}
-{"ts":"2026-08-13T21:09:38.002Z","event":"replay.step","stepIndex":2,"verb":"click","description":"Click 'Sign On' button","note":"checkpoint ok"}
-{"ts":"2026-08-13T21:09:38.340Z","event":"replay.step","stepIndex":3,"verb":"click","description":"Click 'Member Search' navigation link","note":"checkpoint ok"}
-{"ts":"2026-08-13T21:09:38.482Z","event":"replay.step","stepIndex":4,"verb":"type","description":"Type member number into 'Member Number:' field","note":"ok (no checkpoint)"}
-{"ts":"2026-08-13T21:09:38.632Z","event":"replay.business_outcome","code":"MEMBER_NOT_FOUND","description":"The searched member number does not exist. Legitimate business result, not a failure."}

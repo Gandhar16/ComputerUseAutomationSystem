@@ -14,7 +14,7 @@ export interface DiscoveryResult {
   extracts: { name: string; description: string; target: TargetDescriptor; value: string | null }[];
 }
 
-const MAX_STEPS = 25;
+const MAX_STEPS = 40;
 
 const SYSTEM_PROMPT = `You are a computer-use agent operating a legacy bank back-office web application on behalf of a credit union. You see a snapshot of the current screen (its text and its interactive elements, each with a ref like e3) and you decide ONE next action at a time.
 
@@ -22,7 +22,7 @@ Rules:
 - Work strictly toward the stated goal. Do not explore unrelated screens.
 - If credentials are needed, type the literal placeholder strings given to you (e.g. {{credential:username}}, {{credential:password}}). The system substitutes real values; you never see them.
 - Use the provided input parameter values where the flow needs them.
-- When the goal asks you to read/extract data, use the "extract" verb with the element ref that contains the value and the output name you were given.
+- When the goal asks you to read/extract data, use the "extract" verb with the element ref that contains the value and the output name you were given. Data values on screen appear as [text] elements in the element list — extract from those refs; refs are the ONLY valid way to address the screen.
 - When the goal is fully achieved, reply with verb "done" and a summary.
 - If you cannot make progress (unexpected error screen, missing permissions, dead end), reply with verb "stuck" and explain why.
 
@@ -39,12 +39,15 @@ export async function runDiscovery(opts: {
   logger: RunLogger;
   policy: PolicyEngine;
   interactive?: boolean;
+  /** auto-approve risky actions during discovery (non-interactive demos) */
+  autoApproveRisky?: boolean;
 }): Promise<DiscoveryResult> {
   const { goal, entryUrl, params, outputs, surface, logger, policy } = opts;
   const llm = new LlmClient();
   const trace: TraceStep[] = [];
   const extracts: DiscoveryResult["extracts"] = [];
   const history: string[] = [];
+  let lastSig = "";
 
   logger.log("discovery.start", { goal, entryUrl, params, model: llm.model });
   await surface.goto(entryUrl);
@@ -85,7 +88,12 @@ export async function runDiscovery(opts: {
       const target = toTarget(el!);
       const value = await surface.read(target);
       const name = a.name ?? `output${extracts.length + 1}`;
-      extracts.push({ name, description: outputs[name] ?? name, target, value });
+      const entry = { name, description: outputs[name] ?? name, target, value };
+      const existing = extracts.findIndex((x) => x.name === name);
+      if (existing >= 0) extracts[existing] = entry; else extracts.push(entry);
+      // record in the trace so the compiler knows WHERE extraction happened
+      const here = surface.currentUrl();
+      trace.push({ action: { verb: "extract", target }, urlBefore: here, urlAfter: here, titleAfter: obs.title });
       logger.log("agent.extract", { name, value });
       history.push(`step ${step}: extracted ${name} = "${value}"`);
       continue;
@@ -104,7 +112,9 @@ export async function runDiscovery(opts: {
       await surface.act(action);
     } catch (err) {
       if (err instanceof RiskyActionError) {
-        const ok = await confirmRisky(err, opts.interactive ?? true, logger);
+        const ok = opts.autoApproveRisky
+          ? (logger.log("policy.risky_decision", { ruleId: err.ruleId, approved: true, basis: "--yes-risky flag" }), true)
+          : await confirmRisky(err, opts.interactive ?? true, logger);
         if (ok) {
           policy.permitOnce(err.ruleId);
           await surface.act(action);
@@ -124,7 +134,15 @@ export async function runDiscovery(opts: {
       action, urlBefore, urlAfter: obsAfter.url, titleAfter: obsAfter.title,
       riskyRuleId: policy.classifyRisky(action, urlBefore)?.id,
     });
-    history.push(`step ${step}: ${a.verb}${el ? ` on "${el.name}"` : ""}${a.value && !sensitive ? ` value="${a.value}"` : ""} -> now at ${obsAfter.url}`);
+    const valueNote = sensitive ? " value=(entered)" : a.value ? ` value="${a.value}"` : "";
+    const entry = `step ${step}: ${a.verb}${el ? ` on "${el.name}"` : ""}${valueNote} -> now at ${obsAfter.url}`;
+    const sig = `${a.verb}|${el?.name}|${a.value ?? ""}`;
+    if (lastSig === sig) {
+      history.push(entry + "  [NOTE: you REPEATED the previous action — it already succeeded; do the NEXT thing]");
+    } else {
+      history.push(entry);
+    }
+    lastSig = sig;
     logger.log("agent.acted", { step, verb: a.verb, target: el?.name, urlAfter: obsAfter.url });
   }
 

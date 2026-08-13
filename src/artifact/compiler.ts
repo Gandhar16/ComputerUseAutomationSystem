@@ -63,9 +63,15 @@ export function compileArtifact(opts: {
     source: { description: e.target.description, candidates: e.target.candidates },
   }));
 
+  // The capability ends where its outputs were read: drop trailing steps after
+  // the last extract (post-goal wandering, e.g. "return to member record",
+  // would navigate replay away from the screen the outputs live on).
+  const lastExtract = opts.trace.map((t) => t.action.verb).lastIndexOf("extract");
+  const trace = lastExtract >= 0 ? opts.trace.slice(0, lastExtract + 1) : opts.trace;
+
   const steps: Step[] = [];
   let idx = 0;
-  for (const t of opts.trace) {
+  for (const t of trace) {
     const a = t.action;
     if (a.verb === "extract") continue; // extraction is modeled as outputs, not steps
     const sensitive = !!a.redact;
@@ -88,7 +94,7 @@ export function compileArtifact(opts: {
     });
   }
 
-  const last = opts.trace[opts.trace.length - 1];
+  const last = trace[trace.length - 1];
   return {
     schemaVersion: "1.0",
     capability: {

@@ -1,0 +1,14 @@
+{"ts":"2026-08-13T21:47:57.891Z","event":"replay.start","capability":"open-subaccount","version":1,"params":{"memberId":"23456","accountType":"Holiday Club","nickname":"Beach Trip","deposit":"10"}}
+{"ts":"2026-08-13T21:47:58.025Z","event":"replay.step","stepIndex":0,"verb":"navigate","description":"Navigate to http://localhost:4173/login","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:47:58.067Z","event":"replay.step","stepIndex":1,"verb":"type","description":"Type into 'Operator ID:' (textbox) (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:47:58.123Z","event":"replay.step","stepIndex":2,"verb":"type","description":"Type into 'Password:' (textbox) (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:47:58.421Z","event":"replay.step","stepIndex":3,"verb":"click","description":"Click 'Sign On' (button)","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:47:58.527Z","event":"replay.step","stepIndex":4,"verb":"click","description":"Click 'Member Search' (link)","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:47:58.562Z","event":"replay.step","stepIndex":5,"verb":"type","description":"Type into 'Member Number:' (textbox)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:47:58.664Z","event":"replay.step","stepIndex":6,"verb":"click","description":"Click 'Search' (button)","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:47:58.780Z","event":"replay.step","stepIndex":7,"verb":"click","description":"Click 'View' (link)","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:47:58.893Z","event":"replay.step","stepIndex":8,"verb":"click","description":"Click 'Open New Sub-Account' (link)","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:47:58.925Z","event":"replay.step","stepIndex":9,"verb":"select","description":"Select \"Holiday Club\" in 'Account Type:' (combobox)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:47:58.952Z","event":"replay.step","stepIndex":10,"verb":"type","description":"Type into 'Nickname:' (textbox)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:47:58.976Z","event":"replay.step","stepIndex":11,"verb":"type","description":"Type into 'Initial Deposit ($):' (textbox)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:47:59.075Z","event":"replay.business_outcome","code":"VALIDATION_ERROR","description":"The app rejected the submitted form input. Checked last: the error box is also present on more specific outcomes."}

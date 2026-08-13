@@ -72,7 +72,8 @@ async function main() {
     try {
       const result = await runDiscovery({
         goal, entryUrl: url, params, outputs, surface, logger, policy,
-        interactive: !flags["yes-risky"] ? true : true,
+        interactive: true,
+        autoApproveRisky: !!flags["yes-risky"],
       });
       if (!result.success) {
         console.error(`\nDiscovery did not complete the goal: ${result.summary}`);

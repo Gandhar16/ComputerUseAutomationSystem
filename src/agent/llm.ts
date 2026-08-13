@@ -9,16 +9,19 @@ import { z } from "zod";
  * against malformed output.
  */
 
+// models frequently emit explicit nulls for unused fields — treat null as absent
+const optStr = z.string().nullish().transform((v) => v ?? undefined);
+
 export const DecisionSchema = z.object({
-  thought: z.string().default(""),
+  thought: z.string().nullish().transform((v) => v ?? ""),
   action: z.object({
     verb: z.enum(["click", "type", "select", "navigate", "extract", "done", "stuck"]),
-    ref: z.string().optional(),
-    value: z.string().optional(),
+    ref: optStr,
+    value: optStr,
     /** for extract: which declared output this fills */
-    name: z.string().optional(),
+    name: optStr,
     /** for done/stuck */
-    summary: z.string().optional(),
+    summary: optStr,
   }),
 });
 export type Decision = z.infer<typeof DecisionSchema>;

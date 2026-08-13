@@ -46,6 +46,13 @@ npm run discover -- --goal "Sign on, look up member 12345 and read their current
   --url http://localhost:4173/login --id lookup-member-balance ^
   --param memberId=12345 --output savingsBalance="The member's current savings balance"
 
+# 1b. DISCOVERY of the sub-account flow (has a risky/irreversible step; --yes-risky
+#     auto-approves it for non-interactive demos — omit to be prompted)
+npm run discover -- --goal "Sign on, look up member 23456, open a new Holiday Club sub-account with nickname 'Vacation Fund' and initial deposit 50, confirm it, and read the new account number" ^
+  --url http://localhost:4173/login --id open-subaccount ^
+  --param memberId=23456 --param accountType="Holiday Club" --param nickname="Vacation Fund" --param deposit=50 ^
+  --output newAccountNumber="The account number assigned to the newly created sub-account" --yes-risky
+
 # 2. REPLAY — deterministic, no LLM; returns typed outputs
 npm run replay -- --capability lookup-member-balance --param memberId=12345
 

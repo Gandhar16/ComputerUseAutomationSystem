@@ -26,7 +26,34 @@ const GENERATED_ID = /^(ctl\d+|.*_(txt|btn|ddl|lbl|chk)\w*\d*|id\d+|__.+)$/i;
 
 export function candidatesFor(el: RawElement): LocatorCandidate[] {
   const out: LocatorCandidate[] = [];
-  if (el.role && el.name) {
+  if (el.role === "text") {
+    // non-interactive data cell (extraction target): anchor to its label cell
+    // first — that survives id churn — then id, then structure.
+    if (el.tdLabel && el.tag === "td") {
+      out.push({
+        strategy: "css", value: `td:text-is(${JSON.stringify(el.tdLabel)}) + td`,
+        note: "Value cell anchored to its row label text — survives id churn; breaks only if the label wording changes.",
+      });
+    }
+    if (el.id) {
+      out.push({
+        strategy: "attr", value: `#${CSS_escape(el.id)}`,
+        note: GENERATED_ID.test(el.id)
+          ? "Control id looks framework-generated — low trust."
+          : "Stable-looking element id.",
+      });
+    }
+    if (el.cssPath) {
+      out.push({ strategy: "css", value: el.cssPath, note: "Structural path — brittle last resort." });
+    }
+    return out;
+  }
+  // Only emit a role+name candidate when the name is a REAL accessible name.
+  // Legacy form fields get their display name from the row label cell, which
+  // the accessibility engine cannot see — a role candidate built from it would
+  // never resolve and would just burn a fallback on every replay.
+  const nameIsAccessible = !(["input", "select", "textarea"].includes(el.tag) && el.name === el.tdLabel);
+  if (el.role && el.name && nameIsAccessible) {
     out.push({
       strategy: "role", value: `${el.role}::${el.name}`,
       note: "Accessible role+name — most stable across markup changes and reskins; also portable to a desktop accessibility surface.",
@@ -94,7 +121,7 @@ export class PlaywrightWebSurface implements Surface {
 
   async observe(): Promise<Observation> {
     await this.page.waitForLoadState("domcontentloaded");
-    const raw = await this.page.evaluate(snapshotScript);
+    const raw = await this.page.evaluate(snapshotScript) as { title: string; text: string; elements: RawElement[] };
     const elements: ObservedElement[] = raw.elements.map((el) => ({
       ref: el.ref, role: el.role, name: el.name || el.text || el.tdLabel, tag: el.tag,
       enabled: el.enabled, candidates: candidatesFor(el),
@@ -239,19 +266,21 @@ export class TargetNotFoundError extends Error {
 
 /**
  * In-page snapshot: collects interactive elements with the raw facts needed
- * to build ranked locator candidates. Runs inside the browser.
+ * to build ranked locator candidates. Shipped as a source STRING (not a
+ * function) because tsx/esbuild injects `__name` helper calls into compiled
+ * functions, which do not exist inside the browser page.
  */
-const snapshotScript = () => {
-  function visible(e: Element): boolean {
-    const r = (e as HTMLElement).getBoundingClientRect();
+const snapshotScript = `(() => {
+  const visible = (e) => {
+    const r = e.getBoundingClientRect();
     if (r.width <= 0 || r.height <= 0) return false;
-    const st = getComputedStyle(e as HTMLElement);
+    const st = getComputedStyle(e);
     return st.visibility !== "hidden" && st.display !== "none";
-  }
-  function roleOf(e: Element): string {
+  };
+  const roleOf = (e) => {
     const tag = e.tagName.toLowerCase();
-    const type = ((e as HTMLInputElement).type || "").toLowerCase();
-    if (e.getAttribute("role")) return e.getAttribute("role")!;
+    const type = (e.type || "").toLowerCase();
+    if (e.getAttribute("role")) return e.getAttribute("role");
     if (tag === "a") return "link";
     if (tag === "button") return "button";
     if (tag === "select") return "combobox";
@@ -263,27 +292,8 @@ const snapshotScript = () => {
       return "textbox";
     }
     return "";
-  }
-  function accessibleName(e: Element): string {
-    const aria = e.getAttribute("aria-label");
-    if (aria) return aria.trim();
-    const id = (e as HTMLElement).id;
-    if (id) {
-      const lab = document.querySelector(`label[for="${id}"]`);
-      if (lab?.textContent) return lab.textContent.trim();
-    }
-    const tag = e.tagName.toLowerCase();
-    const type = ((e as HTMLInputElement).type || "").toLowerCase();
-    if (tag === "input" && ["submit", "button", "reset"].includes(type)) {
-      return ((e as HTMLInputElement).value || "").trim();
-    }
-    if (tag === "a" || tag === "button") return (e.textContent || "").trim();
-    const ph = e.getAttribute("placeholder");
-    if (ph) return ph.trim();
-    return tdLabelOf(e); // legacy fallback: row label text as the name
-  }
-  function tdLabelOf(e: Element): string {
-    // legacy table forms: the label is the text of an earlier cell in the same row
+  };
+  const tdLabelOf = (e) => {
     const td = e.closest("td");
     const tr = e.closest("tr");
     if (!td || !tr) return "";
@@ -294,40 +304,81 @@ const snapshotScript = () => {
       prev = prev.previousElementSibling;
     }
     return "";
-  }
-  function cssPath(e: Element): string {
-    const parts: string[] = [];
-    let cur: Element | null = e;
+  };
+  const accessibleName = (e) => {
+    const aria = e.getAttribute("aria-label");
+    if (aria) return aria.trim();
+    const id = e.id;
+    if (id) {
+      const lab = document.querySelector('label[for="' + id + '"]');
+      if (lab && lab.textContent) return lab.textContent.trim();
+    }
+    const tag = e.tagName.toLowerCase();
+    const type = (e.type || "").toLowerCase();
+    if (tag === "input" && ["submit", "button", "reset"].includes(type)) {
+      return (e.value || "").trim();
+    }
+    if (tag === "a" || tag === "button") return (e.textContent || "").trim();
+    const ph = e.getAttribute("placeholder");
+    if (ph) return ph.trim();
+    return tdLabelOf(e); // legacy fallback: row label text as the name
+  };
+  const cssPath = (e) => {
+    const parts = [];
+    let cur = e;
     while (cur && cur.tagName.toLowerCase() !== "body" && parts.length < 8) {
       const tag = cur.tagName.toLowerCase();
-      const parent: Element | null = cur.parentElement;
+      const parent = cur.parentElement;
       if (!parent) break;
-      const sibs = Array.from(parent.children).filter((s) => s.tagName === cur!.tagName);
+      const sibs = Array.from(parent.children).filter((s) => s.tagName === cur.tagName);
       const idx = sibs.indexOf(cur) + 1;
-      parts.unshift(sibs.length > 1 ? `${tag}:nth-of-type(${idx})` : tag);
+      parts.unshift(sibs.length > 1 ? tag + ":nth-of-type(" + idx + ")" : tag);
       cur = parent;
     }
     return "body > " + parts.join(" > ");
-  }
+  };
 
   const sel = "a[href], button, input:not([type=hidden]), select, textarea";
   const els = Array.from(document.querySelectorAll(sel)).filter(visible);
   const elements = els.slice(0, 60).map((e, i) => ({
-    ref: `e${i + 1}`,
+    ref: "e" + (i + 1),
     tag: e.tagName.toLowerCase(),
-    type: ((e as HTMLInputElement).type || "").toLowerCase(),
+    type: (e.type || "").toLowerCase(),
     role: roleOf(e),
     name: accessibleName(e),
     text: (e.tagName.toLowerCase() === "a" || e.tagName.toLowerCase() === "button")
       ? (e.textContent || "").trim() : "",
-    id: (e as HTMLElement).id || "",
+    id: e.id || "",
     nameAttr: e.getAttribute("name") || "",
     tdLabel: tdLabelOf(e),
     cssPath: cssPath(e),
-    enabled: !(e as HTMLInputElement).disabled,
+    enabled: !e.disabled,
   }));
-  const text = (document.body.innerText || "").replace(/\n{3,}/g, "\n\n").slice(0, 2000);
-  return { title: document.title, text, elements } as {
-    title: string; text: string; elements: RawElement[];
-  };
-};
+  // Non-interactive data-bearing cells (extraction targets): leaf td/span/b
+  // with short text — either labeled by the preceding cell or carrying an id.
+  const isInteractive = (e) => e.closest && (e.matches(sel) || e.querySelector(sel));
+  const dataEls = Array.from(document.querySelectorAll("td, span, b"))
+    .filter(visible)
+    .filter((e) => !isInteractive(e))
+    .filter((e) => e.children.length === 0)
+    .map((e) => ({ e, text: (e.textContent || "").trim(), label: tdLabelOf(e) }))
+    .filter((d) => d.text && d.text.length <= 120 && (d.label || d.e.id))
+    .slice(0, 30);
+  dataEls.forEach((d, i) => {
+    elements.push({
+      ref: "e" + (els.length + i + 1),
+      tag: d.e.tagName.toLowerCase(),
+      type: "",
+      role: "text",
+      name: (d.label ? d.label + " " : "") + d.text,
+      text: d.text,
+      id: d.e.id || "",
+      nameAttr: "",
+      tdLabel: d.label,
+      cssPath: cssPath(d.e),
+      enabled: true,
+    });
+  });
+  const text = (document.body.innerText || "").replace(/\\n{3,}/g, "\\n\\n").slice(0, 2000);
+  return { title: document.title, text, elements };
+})()`;

@@ -1,13 +1,13 @@
 {
   "schemaVersion": "1.0",
   "capability": {
-    "id": "lookup-member-balance",
-    "name": "Look up member savings balance",
+    "id": "open-subaccount",
+    "name": "Open a new sub-account for a member",
     "version": 1,
-    "description": "Sign on, look up member 12345 and read their current savings balance",
+    "description": "Sign on, look up member 23456, open a new Holiday Club sub-account with nickname 'Vacation Fund' and initial deposit 50, confirm it, and read the new account number",
     "appId": "legacycu",
-    "createdAt": "2026-08-13T21:43:38.323Z",
-    "createdFromRun": "discovery-2026-08-13T21-43-12",
+    "createdAt": "2026-08-13T21:46:51.892Z",
+    "createdFromRun": "discovery-2026-08-13T21-45-57",
     "reviewStatus": "draft"
   },
   "entry": {
@@ -20,29 +20,45 @@
       "description": "Input parameter 'memberId' observed during discovery.",
       "required": true,
       "sensitive": false
+    },
+    {
+      "name": "accountType",
+      "type": "string",
+      "description": "Input parameter 'accountType' observed during discovery.",
+      "required": true,
+      "sensitive": false
+    },
+    {
+      "name": "nickname",
+      "type": "string",
+      "description": "Input parameter 'nickname' observed during discovery.",
+      "required": true,
+      "sensitive": false
+    },
+    {
+      "name": "deposit",
+      "type": "number",
+      "description": "Input parameter 'deposit' observed during discovery.",
+      "required": true,
+      "sensitive": false
     }
   ],
   "outputs": [
     {
-      "name": "savingsBalance",
+      "name": "newAccountNumber",
       "type": "string",
-      "description": "The member's current savings balance",
+      "description": "The account number assigned to the newly created sub-account",
       "source": {
-        "description": "'Savings Balance $4,382.19' (text)",
+        "description": "'23456-S7005' (text)",
         "candidates": [
           {
-            "strategy": "css",
-            "value": "td:text-is(\"Savings Balance\") + td",
-            "note": "Value cell anchored to its row label text — survives id churn; breaks only if the label wording changes."
-          },
-          {
             "strategy": "attr",
-            "value": "#ctl00_cph_lblSav",
+            "value": "#ctl00_cph_lblAcct",
             "note": "Control id looks framework-generated — low trust."
           },
           {
             "strategy": "css",
-            "value": "body > table > tbody > tr > td > table:nth-of-type(1) > tbody > tr:nth-of-type(3) > td:nth-of-type(2)",
+            "value": "body > tbody > tr > td:nth-of-type(2) > table > tbody > tr > td > b:nth-of-type(2)",
             "note": "Structural path — brittle last resort."
           }
         ]
@@ -315,14 +331,212 @@
           }
         ]
       }
+    },
+    {
+      "index": 8,
+      "verb": "click",
+      "description": "Click 'Open New Sub-Account' (link)",
+      "target": {
+        "description": "'Open New Sub-Account' (link)",
+        "candidates": [
+          {
+            "strategy": "role",
+            "value": "link::Open New Sub-Account",
+            "note": "Accessible role+name — most stable across markup changes and reskins; also portable to a desktop accessibility surface."
+          },
+          {
+            "strategy": "text",
+            "value": "Open New Sub-Account",
+            "note": "Exact visible text — stable while copy is stable."
+          },
+          {
+            "strategy": "css",
+            "value": "body > tbody > tr > td:nth-of-type(2) > table > tbody > tr > td > a:nth-of-type(1)",
+            "note": "Structural path — brittle last resort; used only if everything above fails."
+          }
+        ]
+      },
+      "sensitive": false,
+      "risky": false,
+      "checkpoint": {
+        "description": "Landed on /member/{{memberId}}/subaccount/new (\"LegacyCU :: New Sub-Account\")",
+        "predicates": [
+          {
+            "kind": "urlPath",
+            "value": "/member/{{memberId}}/subaccount/new"
+          }
+        ]
+      }
+    },
+    {
+      "index": 9,
+      "verb": "select",
+      "description": "Select \"Holiday Club\" in 'Account Type:' (combobox)",
+      "target": {
+        "description": "'Account Type:' (combobox)",
+        "candidates": [
+          {
+            "strategy": "tdlabel",
+            "value": "Account Type:",
+            "note": "Legacy table-form pattern: control anchored to its row's label-cell text. Survives id churn; breaks only if the label wording changes."
+          },
+          {
+            "strategy": "attr",
+            "value": "[name=\"ddlType\"]",
+            "note": "Form field name — server-side apps rarely rename these (they are the POST contract)."
+          },
+          {
+            "strategy": "attr",
+            "value": "#ctl00_cph_ddlType",
+            "note": "Control id looks framework-generated (ASP.NET-style) — can shift when the page structure changes; low trust."
+          },
+          {
+            "strategy": "css",
+            "value": "body > tr > td > form > table > tbody > tr:nth-of-type(1) > td:nth-of-type(2) > select",
+            "note": "Structural path — brittle last resort; used only if everything above fails."
+          }
+        ]
+      },
+      "value": "{{accountType}}",
+      "sensitive": false,
+      "risky": false
+    },
+    {
+      "index": 10,
+      "verb": "type",
+      "description": "Type into 'Nickname:' (textbox)",
+      "target": {
+        "description": "'Nickname:' (textbox)",
+        "candidates": [
+          {
+            "strategy": "tdlabel",
+            "value": "Nickname:",
+            "note": "Legacy table-form pattern: control anchored to its row's label-cell text. Survives id churn; breaks only if the label wording changes."
+          },
+          {
+            "strategy": "attr",
+            "value": "[name=\"txtNick\"]",
+            "note": "Form field name — server-side apps rarely rename these (they are the POST contract)."
+          },
+          {
+            "strategy": "attr",
+            "value": "#ctl00_cph_txtNick",
+            "note": "Control id looks framework-generated (ASP.NET-style) — can shift when the page structure changes; low trust."
+          },
+          {
+            "strategy": "css",
+            "value": "body > tr > td > form > table > tbody > tr:nth-of-type(2) > td:nth-of-type(2) > input",
+            "note": "Structural path — brittle last resort; used only if everything above fails."
+          }
+        ]
+      },
+      "value": "{{nickname}}",
+      "sensitive": false,
+      "risky": false
+    },
+    {
+      "index": 11,
+      "verb": "type",
+      "description": "Type into 'Initial Deposit ($):' (textbox)",
+      "target": {
+        "description": "'Initial Deposit ($):' (textbox)",
+        "candidates": [
+          {
+            "strategy": "tdlabel",
+            "value": "Initial Deposit ($):",
+            "note": "Legacy table-form pattern: control anchored to its row's label-cell text. Survives id churn; breaks only if the label wording changes."
+          },
+          {
+            "strategy": "attr",
+            "value": "[name=\"txtDep\"]",
+            "note": "Form field name — server-side apps rarely rename these (they are the POST contract)."
+          },
+          {
+            "strategy": "attr",
+            "value": "#ctl00_cph_txtDep",
+            "note": "Control id looks framework-generated (ASP.NET-style) — can shift when the page structure changes; low trust."
+          },
+          {
+            "strategy": "css",
+            "value": "body > tr > td > form > table > tbody > tr:nth-of-type(3) > td:nth-of-type(2) > input",
+            "note": "Structural path — brittle last resort; used only if everything above fails."
+          }
+        ]
+      },
+      "value": "{{deposit}}",
+      "sensitive": false,
+      "risky": false
+    },
+    {
+      "index": 12,
+      "verb": "click",
+      "description": "Click 'Continue' (button)",
+      "target": {
+        "description": "'Continue' (button)",
+        "candidates": [
+          {
+            "strategy": "role",
+            "value": "button::Continue",
+            "note": "Accessible role+name — most stable across markup changes and reskins; also portable to a desktop accessibility surface."
+          },
+          {
+            "strategy": "attr",
+            "value": "#ctl00_cph_btnCont",
+            "note": "Control id looks framework-generated (ASP.NET-style) — can shift when the page structure changes; low trust."
+          },
+          {
+            "strategy": "css",
+            "value": "body > tr > td > form > table > tbody > tr:nth-of-type(4) > td:nth-of-type(2) > input",
+            "note": "Structural path — brittle last resort; used only if everything above fails."
+          }
+        ]
+      },
+      "sensitive": false,
+      "risky": false,
+      "checkpoint": {
+        "description": "Landed on /member/{{memberId}}/subaccount/confirm (\"LegacyCU :: Confirm Sub-Account\")",
+        "predicates": [
+          {
+            "kind": "urlPath",
+            "value": "/member/{{memberId}}/subaccount/confirm"
+          }
+        ]
+      }
+    },
+    {
+      "index": 13,
+      "verb": "click",
+      "description": "Click 'Create Account' (button)",
+      "target": {
+        "description": "'Create Account' (button)",
+        "candidates": [
+          {
+            "strategy": "role",
+            "value": "button::Create Account",
+            "note": "Accessible role+name — most stable across markup changes and reskins; also portable to a desktop accessibility surface."
+          },
+          {
+            "strategy": "attr",
+            "value": "#ctl00_cph_btnCreate",
+            "note": "Control id looks framework-generated (ASP.NET-style) — can shift when the page structure changes; low trust."
+          },
+          {
+            "strategy": "css",
+            "value": "body > tr > td:nth-of-type(2) > table > tbody > tr > td > form > input",
+            "note": "Structural path — brittle last resort; used only if everything above fails."
+          }
+        ]
+      },
+      "sensitive": false,
+      "risky": true
     }
   ],
   "successCondition": {
-    "description": "Reached final screen /member/{{memberId}} and all declared outputs were extracted.",
+    "description": "Reached final screen /member/{{memberId}}/subaccount/confirm and all declared outputs were extracted.",
     "predicates": [
       {
         "kind": "urlPath",
-        "value": "/member/{{memberId}}"
+        "value": "/member/{{memberId}}/subaccount/confirm"
       }
     ]
   },
