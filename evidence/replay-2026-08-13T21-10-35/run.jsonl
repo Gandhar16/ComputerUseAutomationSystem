@@ -1,0 +1,13 @@
+{"ts":"2026-08-13T21:10:35.671Z","event":"replay.start","capability":"open-subaccount","version":1,"params":{"memberId":"23456","accountType":"Holiday Club","nickname":"Vacation Fund","deposit":"10"}}
+{"ts":"2026-08-13T21:10:35.841Z","event":"replay.step","stepIndex":0,"verb":"type","description":"Type into 'Operator ID:' field (credential)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:10:35.896Z","event":"replay.step","stepIndex":1,"verb":"type","description":"Type into 'Password:' field (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:10:36.243Z","event":"replay.step","stepIndex":2,"verb":"click","description":"Click 'Sign On' button","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:10:36.448Z","event":"replay.step","stepIndex":3,"verb":"click","description":"Click 'Member Search' navigation link","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:10:36.517Z","event":"replay.step","stepIndex":4,"verb":"type","description":"Type member number into 'Member Number:' field","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:10:36.652Z","event":"replay.step","stepIndex":5,"verb":"click","description":"Click 'Search' button","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:10:36.807Z","event":"replay.step","stepIndex":6,"verb":"click","description":"Click 'View' link on the matching result row","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:10:36.933Z","event":"replay.step","stepIndex":7,"verb":"click","description":"Click 'Open New Sub-Account' link","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:10:37.009Z","event":"replay.step","stepIndex":8,"verb":"select","description":"Select account type in 'Account Type:' dropdown","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:10:37.068Z","event":"replay.step","stepIndex":9,"verb":"type","description":"Type nickname into 'Nickname:' field","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:10:37.148Z","event":"replay.step","stepIndex":10,"verb":"type","description":"Type initial deposit into 'Initial Deposit ($):' field","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:10:37.305Z","event":"replay.business_outcome","code":"VALIDATION_ERROR","description":"The app rejected the submitted form input (e.g. deposit below the $25 minimum)."}

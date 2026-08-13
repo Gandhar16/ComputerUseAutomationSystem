@@ -1,0 +1,13 @@
+{
+  "allowedOrigins": ["http://localhost:4173", "http://127.0.0.1:4173"],
+  "allowedActions": ["navigate", "click", "type", "select", "extract", "dismiss"],
+  "riskyRules": [
+    {
+      "id": "confirm-page-submit",
+      "description": "Submitting on a confirmation page is treated as irreversible (creates/changes records).",
+      "match": { "action": "click", "urlPathPattern": "/subaccount/confirm" }
+    }
+  ],
+  "sensitiveParamNames": ["password", "pin", "ssn", "token", "secret", "apikey", "api_key"],
+  "redactInputTypes": ["password"]
+}

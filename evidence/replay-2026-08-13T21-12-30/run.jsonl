@@ -1,0 +1,18 @@
+{"ts":"2026-08-13T21:12:30.704Z","event":"replay.start","capability":"open-subaccount","version":1,"params":{"memberId":"34567","accountType":"Money Market","nickname":"Emergency Fund","deposit":"100"}}
+{"ts":"2026-08-13T21:12:30.943Z","event":"replay.step","stepIndex":0,"verb":"type","description":"Type into 'Operator ID:' field (credential)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:12:30.995Z","event":"replay.step","stepIndex":1,"verb":"type","description":"Type into 'Password:' field (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:12:31.824Z","event":"replay.step","stepIndex":2,"verb":"click","description":"Click 'Sign On' button","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:12:31.931Z","event":"replay.step","stepIndex":3,"verb":"click","description":"Click 'Member Search' navigation link","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:12:31.968Z","event":"replay.step","stepIndex":4,"verb":"type","description":"Type member number into 'Member Number:' field","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:12:32.090Z","event":"replay.step","stepIndex":5,"verb":"click","description":"Click 'Search' button","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:12:32.199Z","event":"replay.step","stepIndex":6,"verb":"click","description":"Click 'View' link on the matching result row","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:12:32.351Z","event":"replay.step","stepIndex":7,"verb":"click","description":"Click 'Open New Sub-Account' link","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:12:32.442Z","event":"replay.step","stepIndex":8,"verb":"select","description":"Select account type in 'Account Type:' dropdown","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:12:32.489Z","event":"replay.step","stepIndex":9,"verb":"type","description":"Type nickname into 'Nickname:' field","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:12:32.530Z","event":"replay.step","stepIndex":10,"verb":"type","description":"Type initial deposit into 'Initial Deposit ($):' field","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:12:32.634Z","event":"replay.step","stepIndex":11,"verb":"click","description":"Click 'Continue' to submit the form","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:12:32.686Z","event":"intervention.raised","capabilityId":"open-subaccount","goal":"Open a new sub-account for a member and reach the created confirmation screen.","stepIndex":12,"stepDescription":"Click 'Create Account' — IRREVERSIBLE: creates a new account record","reason":"Risky step requires human approval (artifact is 'draft', not 'approved'): Click 'Create Account' — IRREVERSIBLE: creates a new account record","screenshot":"evidence\\replay-2026-08-13T21-12-30\\01-step12-escalate.png"}
+{"ts":"2026-08-13T21:12:33.889Z","event":"human.navigation","url":"http://localhost:4173/member/34567/subaccount/confirm"}
+{"ts":"2026-08-13T21:12:33.929Z","event":"intervention.handback"}
+{"ts":"2026-08-13T21:12:33.930Z","event":"intervention.resumed","url":"http://localhost:4173/member/34567/subaccount/confirm"}
+{"ts":"2026-08-13T21:12:33.977Z","event":"replay.resumed_success_after_human","outputs":{"newAccountNumber":"34567-S7003"}}

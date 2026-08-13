@@ -1,0 +1,8 @@
+{"ts":"2026-08-13T21:09:42.792Z","event":"replay.start","capability":"lookup-member-balance","version":1,"params":{"memberId":"55555"}}
+{"ts":"2026-08-13T21:09:42.949Z","event":"replay.step","stepIndex":0,"verb":"type","description":"Type into 'Operator ID:' field (credential)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:09:42.987Z","event":"replay.step","stepIndex":1,"verb":"type","description":"Type into 'Password:' field (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:09:43.398Z","event":"replay.step","stepIndex":2,"verb":"click","description":"Click 'Sign On' button","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:09:43.615Z","event":"replay.step","stepIndex":3,"verb":"click","description":"Click 'Member Search' navigation link","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:09:43.687Z","event":"replay.step","stepIndex":4,"verb":"type","description":"Type member number into 'Member Number:' field","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:09:44.019Z","event":"replay.step","stepIndex":5,"verb":"click","description":"Click 'Search' button","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:09:44.199Z","event":"replay.business_outcome","code":"PERMISSION_DENIED","description":"The operator role is not allowed to perform this action."}

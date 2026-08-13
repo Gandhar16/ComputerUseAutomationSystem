@@ -1,0 +1,16 @@
+{"ts":"2026-08-13T21:11:06.811Z","event":"replay.start","capability":"open-subaccount","version":1,"params":{"memberId":"23456","accountType":"Holiday Club","nickname":"Vacation Fund","deposit":"50"}}
+{"ts":"2026-08-13T21:11:07.024Z","event":"replay.step","stepIndex":0,"verb":"type","description":"Type into 'Operator ID:' field (credential)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:11:07.088Z","event":"replay.step","stepIndex":1,"verb":"type","description":"Type into 'Password:' field (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:11:08.058Z","event":"replay.step","stepIndex":2,"verb":"click","description":"Click 'Sign On' button","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:11:08.261Z","event":"replay.step","stepIndex":3,"verb":"click","description":"Click 'Member Search' navigation link","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:11:08.324Z","event":"replay.step","stepIndex":4,"verb":"type","description":"Type member number into 'Member Number:' field","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:11:08.487Z","event":"replay.step","stepIndex":5,"verb":"click","description":"Click 'Search' button","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:11:08.594Z","event":"replay.step","stepIndex":6,"verb":"click","description":"Click 'View' link on the matching result row","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:11:08.698Z","event":"replay.step","stepIndex":7,"verb":"click","description":"Click 'Open New Sub-Account' link","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:11:08.735Z","event":"replay.step","stepIndex":8,"verb":"select","description":"Select account type in 'Account Type:' dropdown","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:11:08.774Z","event":"replay.step","stepIndex":9,"verb":"type","description":"Type nickname into 'Nickname:' field","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:11:08.807Z","event":"replay.step","stepIndex":10,"verb":"type","description":"Type initial deposit into 'Initial Deposit ($):' field","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T21:11:08.905Z","event":"replay.step","stepIndex":11,"verb":"click","description":"Click 'Continue' to submit the form","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:11:08.908Z","event":"policy.risky_permitted","stepIndex":12,"ruleId":"confirm-page-submit","basis":"artifact approved by review"}
+{"ts":"2026-08-13T21:11:09.024Z","event":"replay.step","stepIndex":12,"verb":"click","description":"Click 'Create Account' — IRREVERSIBLE: creates a new account record","note":"checkpoint ok"}
+{"ts":"2026-08-13T21:11:09.091Z","event":"replay.success","outputs":{"newAccountNumber":"23456-S7001"}}

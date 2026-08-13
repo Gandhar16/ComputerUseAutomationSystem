@@ -1,0 +1,36 @@
+{
+  "appId": "legacycu",
+  "name": "LegacyCU Back Office",
+  "description": "Mock legacy credit-union back-office app (stand-in for a vendor core-banking UI).",
+  "expectedOutcomes": [
+    {
+      "code": "MEMBER_NOT_FOUND",
+      "description": "The searched member number does not exist. Legitimate business result, not a failure.",
+      "detect": { "kind": "text", "value": "No member found" }
+    },
+    {
+      "code": "PERMISSION_DENIED",
+      "description": "The operator role is not allowed to perform this action.",
+      "detect": { "kind": "text", "value": "Access denied" }
+    },
+    {
+      "code": "VALIDATION_ERROR",
+      "description": "The app rejected the submitted form input. Checked last: the error box is also present on more specific outcomes.",
+      "detect": { "kind": "selector", "value": ".errbox" }
+    }
+  ],
+  "knownInterstitials": [
+    {
+      "id": "maintenance-notice",
+      "description": "Occasional maintenance notice dialog; safe to dismiss.",
+      "detect": { "kind": "selector", "value": "#sysNotice" },
+      "dismiss": { "action": "click", "selector": "#sysNotice input[value=\"OK\"]" }
+    }
+  ],
+  "recoverable": {
+    "sessionExpired": {
+      "detect": { "kind": "text", "value": "Session expired" },
+      "strategy": "relogin"
+    }
+  }
+}
