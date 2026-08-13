@@ -75,6 +75,14 @@ npm run replay -- --capability open-subaccount --escalate --param memberId=34567
 #    (no human handy? scripted stand-in: npx tsx scripts/simulate-escalation.ts)
 
 npm run list   # catalog of saved capabilities with their typed contracts
+
+# 7. AGENT-FACING CAPABILITY CATALOG (stretch goal) — capabilities as callable tools
+npm run serve  # http://localhost:4700
+#    GET  /capabilities                     -> tool-call-shaped contracts (params + returns + possible outcomes)
+#    POST /capabilities/<id>/invoke         -> deterministic replay, e.g.:
+#      curl -X POST localhost:4700/capabilities/lookup-member-balance/invoke ^
+#           -H "Content-Type: application/json" -d "{\"params\":{\"memberId\":\"34567\"}}"
+#    Transcript of a live invocation: evidence/catalog-demo.md
 ```
 
 Every run writes evidence to `evidence/<runId>/` — a structured `run.jsonl` (decisions, actions, policy verdicts) plus screenshots at each step and on failure.
@@ -91,6 +99,7 @@ src/artifact/        capability schema (Zod), param lifting, store
 src/replay/          deterministic replay engine + result contract
 src/safety/          policy engine, redaction, credential indirection
 src/escalation/      control gate (AUTOMATION/HUMAN/RESUMING) + operator console
+src/catalog/         agent-facing capability catalog (HTTP; stretch goal)
 src/evidence/        structured run logger + screenshots
 capabilities/        saved capability artifacts (JSON)
 evidence/            per-run logs and screenshots

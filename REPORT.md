@@ -16,7 +16,7 @@ Trade-offs: a single process (no queues/services) is enough to prove the seams a
 A capability is a **contract, not a step list** (`src/artifact/schema.ts`, examples in `capabilities/`):
 
 - `capability` — id, semantic version, description, target `appId`, provenance (`createdFromRun` links to the discovery evidence), and `reviewStatus` (`draft`/`approved`) which gates unattended risky steps.
-- `inputs` / `outputs` — typed, described parameters and extractions. This is what a calling agent sees; invocation is `replay(id, params) -> result`.
+- `inputs` / `outputs` — typed, described parameters and extractions. This is what a calling agent sees; invocation is `replay(id, params) -> result`, exposed concretely by the **capability catalog** (stretch goal, `src/catalog`): `GET /capabilities` serves each artifact as a tool-call-shaped contract (JSON-Schema `parameters`, `returns`, and the enumerated `possibleOutcomes`), and `POST /capabilities/:id/invoke` runs the deterministic replay — a live invocation transcript is in `evidence/catalog-demo.md`.
 - `steps[]` — verb + `TargetDescriptor` with a **ranked list of locator candidates**, each carrying a recorded robustness note (why role+name is trusted, why a `ctl00_*` id is not). Values are parameterized: discovery literals matching declared params are lifted to `{{memberId}}`; credentials are stored only as `{{credential:...}}` indirections resolved from the environment at act time.
 - `checkpoint` per navigation step and a final `successCondition` — asserted state, not assumed clicks.
 - `expectedOutcomes[]` — the app's legitimate non-success results (`MEMBER_NOT_FOUND`, `PERMISSION_DENIED`, `VALIDATION_ERROR`) with detection predicates; `knownInterstitials[]` (detect + dismiss recipe) and `recoverables[]` (e.g. session expiry → restart). These are merged from a per-app profile (`config/app-profiles/`) so knowledge about the app accumulates independently of any one recording.
@@ -58,12 +58,13 @@ The operator console is deliberately bare (the brief allows a mocked UI); the ha
 
 ## 7. Cuts
 
+One stretch goal was built: the **agent-facing capability catalog** (§2) — chosen because it is the through-line made concrete (deterministic replay as the agent's invocation path) and a thin layer over existing pieces rather than new machinery.
+
 Deliberate cuts, roughly in order of what I'd build next:
 
 1. **Assisted fallback on replay failure** — a bounded, policy-checked single-step LLM recovery, recorded as evidence; the escalation seam is exactly where it plugs in.
-2. **Capability catalog surface** — `list` exists; an HTTP/tool-calling endpoint so an agent can discover and invoke capabilities by name is a thin layer over `replay()`.
-3. **Cross-tenant demo** — a second LegacyCU variant (relabeled/reskinned) replaying the base artifact with a per-variant overlay, proving §4 operationally.
-4. **Confidence scoring / multi-run stability** — replay N times, track fallback-locator and retry rates per artifact, gate `approved` on it.
-5. **Operator console fidelity** — live view/remote control (CDP screencast), operator queues, RBAC. The control-transfer model wouldn't change.
-6. **Desktop surface implementation** — the interface is designed for it; not built.
-7. Artifact **schema migrations** (only a `schemaVersion` field today), richer per-step wait strategies, and parallel-session replay workers.
+2. **Cross-tenant demo** — a second LegacyCU variant (relabeled/reskinned) replaying the base artifact with a per-variant overlay, proving §4 operationally.
+3. **Confidence scoring / multi-run stability** — replay N times, track fallback-locator and retry rates per artifact, gate `approved` on it.
+4. **Operator console fidelity** — live view/remote control (CDP screencast), operator queues, RBAC. The control-transfer model wouldn't change.
+5. **Desktop surface implementation** — the interface is designed for it; not built.
+6. Artifact **schema migrations** (only a `schemaVersion` field today), richer per-step wait strategies, and parallel-session replay workers.

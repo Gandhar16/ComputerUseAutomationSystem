@@ -8,6 +8,7 @@ import { compileArtifact } from "./artifact/compiler.js";
 import { saveArtifact, loadArtifact, listArtifacts } from "./artifact/store.js";
 import { replay } from "./replay/engine.js";
 import { EscalationManager } from "./escalation/handoff.js";
+import { startCatalog } from "./catalog/server.js";
 
 /** Tiny arg parser: --key value / --key=value; repeated --param k=v collect into maps. */
 function parseArgs(argv: string[]) {
@@ -49,6 +50,11 @@ async function main() {
       console.log(`  inputs:  ${a.inputs.map((i) => `${i.name}:${i.type}`).join(", ") || "(none)"}`);
       console.log(`  outputs: ${a.outputs.map((o) => `${o.name}:${o.type}`).join(", ") || "(none)"}`);
     }
+    return;
+  }
+
+  if (cmd === "serve") {
+    startCatalog();
     return;
   }
 
@@ -137,6 +143,7 @@ async function main() {
   npm run discover -- --goal "<goal>" --url <entryUrl> --id <capability-id> [--name "<Name>"] [--param k=v ...] [--output name="description" ...] [--headed]
   npm run replay   -- --capability <id> [--param k=v ...] [--headed] [--escalate]
   npm run list
+  npm run serve      (agent-facing capability catalog on :4700)
   tsx src/cli.ts approve --capability <id>`);
   process.exit(cmd ? 2 : 0);
 }

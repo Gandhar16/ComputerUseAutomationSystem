@@ -14,3 +14,5 @@ Each directory is one run: `run.jsonl` (structured log of every observation, dec
 | `replay-2026-08-13T21-48-02` | Risky step on a `draft` artifact, unattended → **structured `failure`** (expected vs. observed + screenshot) |
 | `replay-2026-08-13T21-48-15` | **Escalation & handoff**: intervention raised, control → HUMAN, step performed in the live session, hand-back, resumed → `escalated / completed_by_human` with outputs |
 | `replay-2026-08-13T21-48-24` | Same risky step after review approval → unattended `success` |
+| `replay-2026-08-13T22-12-21` | **Catalog invocation** (`POST /capabilities/lookup-member-balance/invoke`) → `success` — see `catalog-demo.md` |
+| `replay-2026-08-13T22-12-24` | Catalog invocation with bad input → `MEMBER_NOT_FOUND` propagated to the caller — see `catalog-demo.md` |

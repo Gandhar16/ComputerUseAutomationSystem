@@ -9,6 +9,7 @@
     "discover": "tsx src/cli.ts discover",
     "replay": "tsx src/cli.ts replay",
     "list": "tsx src/cli.ts list",
+    "serve": "tsx src/cli.ts serve",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

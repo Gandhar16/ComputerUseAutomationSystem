@@ -1,0 +1,10 @@
+{"ts":"2026-08-13T22:12:21.773Z","event":"replay.start","capability":"lookup-member-balance","version":1,"params":{"memberId":"34567"}}
+{"ts":"2026-08-13T22:12:21.902Z","event":"replay.step","stepIndex":0,"verb":"navigate","description":"Navigate to http://localhost:4173/login","note":"checkpoint ok"}
+{"ts":"2026-08-13T22:12:21.941Z","event":"replay.step","stepIndex":1,"verb":"type","description":"Type into 'Operator ID:' (textbox) (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T22:12:21.970Z","event":"replay.step","stepIndex":2,"verb":"type","description":"Type into 'Password:' (textbox) (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T22:12:22.771Z","event":"replay.step","stepIndex":3,"verb":"click","description":"Click 'Sign On' (button)","note":"checkpoint ok"}
+{"ts":"2026-08-13T22:12:22.879Z","event":"replay.step","stepIndex":4,"verb":"click","description":"Click 'Member Search' (link)","note":"checkpoint ok"}
+{"ts":"2026-08-13T22:12:22.914Z","event":"replay.step","stepIndex":5,"verb":"type","description":"Type into 'Member Number:' (textbox)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T22:12:23.020Z","event":"replay.step","stepIndex":6,"verb":"click","description":"Click 'Search' (button)","note":"checkpoint ok"}
+{"ts":"2026-08-13T22:12:23.133Z","event":"replay.step","stepIndex":7,"verb":"click","description":"Click 'View' (link)","note":"checkpoint ok"}
+{"ts":"2026-08-13T22:12:24.689Z","event":"replay.success","outputs":{"savingsBalance":"$18,204.66"}}
