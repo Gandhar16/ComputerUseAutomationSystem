@@ -113,6 +113,15 @@ function popNotice(s: Session): boolean {
 // inject requested before sign-on (no session yet): apply to the next session
 let pendingInject: string | undefined;
 
+// One-shot chaos arm endpoint (demo/testing): arms a condition that the NEXT
+// login consumes exactly once. Unlike ?inject= on the entry URL, re-visiting
+// the entry page (e.g. a session-expiry restart) does NOT re-arm it — which is
+// what lets a restart-recovery demo actually recover.
+app.get("/chaos", (req, res) => {
+  pendingInject = typeof req.query.inject === "string" ? req.query.inject : undefined;
+  res.json({ armed: pendingInject ?? null });
+});
+
 app.get("/login", (req, res) => {
   if (typeof req.query.inject === "string") pendingInject = req.query.inject;
   res.send(page("Sign On", `

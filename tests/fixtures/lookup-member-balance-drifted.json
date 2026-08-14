@@ -1,0 +1,385 @@
+{
+  "schemaVersion": "1.0",
+  "capability": {
+    "id": "lookup-member-balance-drifted",
+    "name": "DRIFT FIXTURE: Look up member savings balance",
+    "version": 1,
+    "description": "Test fixture simulating UI drift: the member-number field primary locator (tdlabel) references the OLD label wording, forcing replay to fall back to the [name] candidate and emit a locator_fallback drift signal.",
+    "appId": "legacycu",
+    "createdAt": "2026-08-13T21:43:38.323Z",
+    "createdFromRun": "discovery-2026-08-13T21-43-12",
+    "reviewStatus": "draft"
+  },
+  "entry": {
+    "url": "http://localhost:4173/login"
+  },
+  "inputs": [
+    {
+      "name": "memberId",
+      "type": "number",
+      "description": "Input parameter 'memberId' observed during discovery.",
+      "required": true,
+      "sensitive": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "savingsBalance",
+      "type": "string",
+      "description": "The member's current savings balance",
+      "source": {
+        "description": "'Savings Balance $4,382.19' (text)",
+        "candidates": [
+          {
+            "strategy": "css",
+            "value": "td:text-is(\"Savings Balance\") + td",
+            "note": "Value cell anchored to its row label text — survives id churn; breaks only if the label wording changes."
+          },
+          {
+            "strategy": "attr",
+            "value": "#ctl00_cph_lblSav",
+            "note": "Control id looks framework-generated — low trust."
+          },
+          {
+            "strategy": "css",
+            "value": "body > table > tbody > tr > td > table:nth-of-type(1) > tbody > tr:nth-of-type(3) > td:nth-of-type(2)",
+            "note": "Structural path — brittle last resort."
+          }
+        ]
+      }
+    }
+  ],
+  "steps": [
+    {
+      "index": 0,
+      "verb": "navigate",
+      "description": "Navigate to http://localhost:4173/login",
+      "value": "http://localhost:4173/login",
+      "sensitive": false,
+      "risky": false,
+      "checkpoint": {
+        "description": "Landed on /login (\"\")",
+        "predicates": [
+          {
+            "kind": "urlPath",
+            "value": "/login"
+          }
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "verb": "type",
+      "description": "Type into 'Operator ID:' (textbox) (sensitive)",
+      "target": {
+        "description": "'Operator ID:' (textbox)",
+        "candidates": [
+          {
+            "strategy": "tdlabel",
+            "value": "Operator ID:",
+            "note": "Legacy table-form pattern: control anchored to its row's label-cell text. Survives id churn; breaks only if the label wording changes."
+          },
+          {
+            "strategy": "attr",
+            "value": "[name=\"txtUser\"]",
+            "note": "Form field name — server-side apps rarely rename these (they are the POST contract)."
+          },
+          {
+            "strategy": "attr",
+            "value": "#ctl00_main_txt1",
+            "note": "Control id looks framework-generated (ASP.NET-style) — can shift when the page structure changes; low trust."
+          },
+          {
+            "strategy": "css",
+            "value": "body > tr > td > form > table > tbody > tr:nth-of-type(2) > td:nth-of-type(2) > input",
+            "note": "Structural path — brittle last resort; used only if everything above fails."
+          }
+        ]
+      },
+      "value": "{{credential:username}}",
+      "sensitive": true,
+      "risky": false
+    },
+    {
+      "index": 2,
+      "verb": "type",
+      "description": "Type into 'Password:' (textbox) (sensitive)",
+      "target": {
+        "description": "'Password:' (textbox)",
+        "candidates": [
+          {
+            "strategy": "tdlabel",
+            "value": "Password:",
+            "note": "Legacy table-form pattern: control anchored to its row's label-cell text. Survives id churn; breaks only if the label wording changes."
+          },
+          {
+            "strategy": "attr",
+            "value": "[name=\"txtPass\"]",
+            "note": "Form field name — server-side apps rarely rename these (they are the POST contract)."
+          },
+          {
+            "strategy": "attr",
+            "value": "#ctl00_main_txt2",
+            "note": "Control id looks framework-generated (ASP.NET-style) — can shift when the page structure changes; low trust."
+          },
+          {
+            "strategy": "css",
+            "value": "body > tr > td > form > table > tbody > tr:nth-of-type(3) > td:nth-of-type(2) > input",
+            "note": "Structural path — brittle last resort; used only if everything above fails."
+          }
+        ]
+      },
+      "value": "{{credential:password}}",
+      "sensitive": true,
+      "risky": false
+    },
+    {
+      "index": 3,
+      "verb": "click",
+      "description": "Click 'Sign On' (button)",
+      "target": {
+        "description": "'Sign On' (button)",
+        "candidates": [
+          {
+            "strategy": "role",
+            "value": "button::Sign On",
+            "note": "Accessible role+name — most stable across markup changes and reskins; also portable to a desktop accessibility surface."
+          },
+          {
+            "strategy": "attr",
+            "value": "#ctl00_main_btn1",
+            "note": "Control id looks framework-generated (ASP.NET-style) — can shift when the page structure changes; low trust."
+          },
+          {
+            "strategy": "css",
+            "value": "body > tr > td > form > table > tbody > tr:nth-of-type(4) > td:nth-of-type(2) > input",
+            "note": "Structural path — brittle last resort; used only if everything above fails."
+          }
+        ]
+      },
+      "sensitive": false,
+      "risky": false,
+      "checkpoint": {
+        "description": "Landed on / (\"LegacyCU :: Teller Desk\")",
+        "predicates": [
+          {
+            "kind": "urlPath",
+            "value": "/"
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "verb": "click",
+      "description": "Click 'Member Search' (link)",
+      "target": {
+        "description": "'Member Search' (link)",
+        "candidates": [
+          {
+            "strategy": "role",
+            "value": "link::Member Search",
+            "note": "Accessible role+name — most stable across markup changes and reskins; also portable to a desktop accessibility surface."
+          },
+          {
+            "strategy": "text",
+            "value": "Member Search",
+            "note": "Exact visible text — stable while copy is stable."
+          },
+          {
+            "strategy": "css",
+            "value": "body > tbody > tr > td:nth-of-type(1) > table > tbody > tr:nth-of-type(2) > td > a",
+            "note": "Structural path — brittle last resort; used only if everything above fails."
+          }
+        ]
+      },
+      "value": "",
+      "sensitive": false,
+      "risky": false,
+      "checkpoint": {
+        "description": "Landed on /members (\"LegacyCU :: Member Search\")",
+        "predicates": [
+          {
+            "kind": "urlPath",
+            "value": "/members"
+          }
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "verb": "type",
+      "description": "Type into 'Member Number:' (textbox)",
+      "target": {
+        "description": "'Member Number:' (textbox)",
+        "candidates": [
+          {
+            "strategy": "tdlabel",
+            "value": "Member No:",
+            "note": "Legacy table-form pattern: control anchored to its row's label-cell text. Survives id churn; breaks only if the label wording changes."
+          },
+          {
+            "strategy": "attr",
+            "value": "[name=\"q\"]",
+            "note": "Form field name — server-side apps rarely rename these (they are the POST contract)."
+          },
+          {
+            "strategy": "attr",
+            "value": "#ctl00_cph_txtMbr",
+            "note": "Control id looks framework-generated (ASP.NET-style) — can shift when the page structure changes; low trust."
+          },
+          {
+            "strategy": "css",
+            "value": "body > tr > td > form > table > tbody > tr:nth-of-type(2) > td:nth-of-type(2) > input",
+            "note": "Structural path — brittle last resort; used only if everything above fails."
+          }
+        ]
+      },
+      "value": "{{memberId}}",
+      "sensitive": false,
+      "risky": false
+    },
+    {
+      "index": 6,
+      "verb": "click",
+      "description": "Click 'Search' (button)",
+      "target": {
+        "description": "'Search' (button)",
+        "candidates": [
+          {
+            "strategy": "role",
+            "value": "button::Search",
+            "note": "Accessible role+name — most stable across markup changes and reskins; also portable to a desktop accessibility surface."
+          },
+          {
+            "strategy": "tdlabel",
+            "value": "Member Number:",
+            "note": "Legacy table-form pattern: control anchored to its row's label-cell text. Survives id churn; breaks only if the label wording changes."
+          },
+          {
+            "strategy": "attr",
+            "value": "#ctl00_cph_btnGo",
+            "note": "Control id looks framework-generated (ASP.NET-style) — can shift when the page structure changes; low trust."
+          },
+          {
+            "strategy": "css",
+            "value": "body > tr > td > form > table > tbody > tr:nth-of-type(2) > td:nth-of-type(3) > input",
+            "note": "Structural path — brittle last resort; used only if everything above fails."
+          }
+        ]
+      },
+      "sensitive": false,
+      "risky": false,
+      "checkpoint": {
+        "description": "Landed on /members/search (\"LegacyCU :: Member Search\")",
+        "predicates": [
+          {
+            "kind": "urlPath",
+            "value": "/members/search"
+          }
+        ]
+      }
+    },
+    {
+      "index": 7,
+      "verb": "click",
+      "description": "Click 'View' (link)",
+      "target": {
+        "description": "'View' (link)",
+        "candidates": [
+          {
+            "strategy": "role",
+            "value": "link::View",
+            "note": "Accessible role+name — most stable across markup changes and reskins; also portable to a desktop accessibility surface."
+          },
+          {
+            "strategy": "text",
+            "value": "View",
+            "note": "Exact visible text — stable while copy is stable."
+          },
+          {
+            "strategy": "css",
+            "value": "body > tbody > tr > td > table > tbody > tr:nth-of-type(2) > td:nth-of-type(4) > a",
+            "note": "Structural path — brittle last resort; used only if everything above fails."
+          }
+        ]
+      },
+      "sensitive": false,
+      "risky": false,
+      "checkpoint": {
+        "description": "Landed on /member/{{memberId}} (\"LegacyCU :: Member Detail\")",
+        "predicates": [
+          {
+            "kind": "urlPath",
+            "value": "/member/{{memberId}}"
+          }
+        ]
+      }
+    }
+  ],
+  "successCondition": {
+    "description": "Reached final screen /member/{{memberId}} and all declared outputs were extracted.",
+    "predicates": [
+      {
+        "kind": "urlPath",
+        "value": "/member/{{memberId}}"
+      }
+    ]
+  },
+  "expectedOutcomes": [
+    {
+      "code": "MEMBER_NOT_FOUND",
+      "description": "The searched member number does not exist. Legitimate business result, not a failure.",
+      "detect": {
+        "kind": "text",
+        "value": "No member found"
+      }
+    },
+    {
+      "code": "PERMISSION_DENIED",
+      "description": "The operator role is not allowed to perform this action.",
+      "detect": {
+        "kind": "text",
+        "value": "Access denied"
+      }
+    },
+    {
+      "code": "VALIDATION_ERROR",
+      "description": "The app rejected the submitted form input. Checked last: the error box is also present on more specific outcomes.",
+      "detect": {
+        "kind": "selector",
+        "value": ".errbox"
+      }
+    }
+  ],
+  "knownInterstitials": [
+    {
+      "id": "maintenance-notice",
+      "description": "Occasional maintenance notice dialog; safe to dismiss.",
+      "detect": {
+        "kind": "selector",
+        "value": "#sysNotice"
+      },
+      "dismiss": {
+        "action": "click",
+        "selector": "#sysNotice input[value=\"OK\"]"
+      }
+    }
+  ],
+  "recoverables": [
+    {
+      "id": "session-expired",
+      "description": "Session timed out mid-flow; restart from the beginning (login steps re-authenticate).",
+      "detect": {
+        "kind": "text",
+        "value": "Session expired"
+      },
+      "strategy": "restart",
+      "maxAttempts": 1
+    }
+  ],
+  "limits": {
+    "stepTimeoutMs": 8000,
+    "transientRetries": 1
+  }
+}

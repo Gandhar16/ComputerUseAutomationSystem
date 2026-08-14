@@ -1,0 +1,16 @@
+{"ts":"2026-08-14T00:28:16.437Z","event":"replay.start","capability":"lookup-member-balance","version":1,"params":{"memberId":"12345"}}
+{"ts":"2026-08-14T00:28:16.664Z","event":"replay.step","stepIndex":0,"verb":"navigate","description":"Navigate to http://localhost:4173/login","note":"checkpoint ok"}
+{"ts":"2026-08-14T00:28:16.761Z","event":"replay.step","stepIndex":1,"verb":"type","description":"Type into 'Operator ID:' (textbox) (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-14T00:28:16.819Z","event":"replay.step","stepIndex":2,"verb":"type","description":"Type into 'Password:' (textbox) (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-14T00:28:17.647Z","event":"replay.step","stepIndex":3,"verb":"click","description":"Click 'Sign On' (button)","note":"checkpoint ok"}
+{"ts":"2026-08-14T00:28:17.818Z","event":"replay.recoverable","id":"session-expired","strategy":"restart","description":"Session timed out mid-flow; restart from the beginning (login steps re-authenticate)."}
+{"ts":"2026-08-14T00:28:17.819Z","event":"replay.restart","atStep":4}
+{"ts":"2026-08-14T00:28:17.993Z","event":"replay.step","stepIndex":0,"verb":"navigate","description":"Navigate to http://localhost:4173/login","note":"checkpoint ok"}
+{"ts":"2026-08-14T00:28:18.064Z","event":"replay.step","stepIndex":1,"verb":"type","description":"Type into 'Operator ID:' (textbox) (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-14T00:28:18.113Z","event":"replay.step","stepIndex":2,"verb":"type","description":"Type into 'Password:' (textbox) (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-14T00:28:18.255Z","event":"replay.step","stepIndex":3,"verb":"click","description":"Click 'Sign On' (button)","note":"checkpoint ok"}
+{"ts":"2026-08-14T00:28:18.394Z","event":"replay.step","stepIndex":4,"verb":"click","description":"Click 'Member Search' (link)","note":"checkpoint ok"}
+{"ts":"2026-08-14T00:28:18.454Z","event":"replay.step","stepIndex":5,"verb":"type","description":"Type into 'Member Number:' (textbox)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-14T00:28:18.596Z","event":"replay.step","stepIndex":6,"verb":"click","description":"Click 'Search' (button)","note":"checkpoint ok"}
+{"ts":"2026-08-14T00:28:18.767Z","event":"replay.step","stepIndex":7,"verb":"click","description":"Click 'View' (link)","note":"checkpoint ok"}
+{"ts":"2026-08-14T00:28:20.383Z","event":"replay.success","outputs":{"savingsBalance":"$4,382.19"}}

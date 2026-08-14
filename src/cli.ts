@@ -54,7 +54,7 @@ async function main() {
   }
 
   if (cmd === "serve") {
-    startCatalog();
+    await startCatalog();
     return;
   }
 
@@ -114,10 +114,13 @@ async function main() {
 
   if (cmd === "replay") {
     const a = loadArtifact(req(flags, "capability"));
-    // Demo/testing knob: append a chaos-injection query param to the entry URL
-    // (the target app uses it to simulate interstitials, slowness, expiry).
+    // Demo/testing knob: arm a one-shot chaos condition in the target app
+    // (interstitial dialog, slow load, session expiry). Armed out-of-band so a
+    // restart-recovery revisiting the entry URL does not re-trigger it.
     if (typeof flags.inject === "string") {
-      a.entry.url += (a.entry.url.includes("?") ? "&" : "?") + "inject=" + flags.inject;
+      const chaosUrl = new URL("/chaos?inject=" + flags.inject, a.entry.url).toString();
+      await fetch(chaosUrl);
+      console.log(`  (chaos armed: ${flags.inject})`);
     }
     const escalate = !!flags.escalate;
     const policy = PolicyEngine.load();

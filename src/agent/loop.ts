@@ -1,11 +1,17 @@
 import type OpenAI from "openai";
 import readline from "node:readline/promises";
-import { LlmClient } from "./llm.js";
+import { LlmClient, type Decision } from "./llm.js";
 import type { Observation, ObservedElement, Surface, TargetDescriptor } from "../surface/types.js";
 import type { RunLogger } from "../evidence/logger.js";
 import { PolicyEngine, RiskyActionError } from "../safety/policy.js";
 import { isCredentialRef } from "../safety/redact.js";
 import type { TraceStep } from "../artifact/compiler.js";
+
+/** what the loop needs from a model — satisfied by LlmClient or a test fake */
+export interface DecisionMaker {
+  decide(messages: OpenAI.ChatCompletionMessageParam[]): Promise<{ decision: Decision; raw: string }>;
+  readonly model: string;
+}
 
 export interface DiscoveryResult {
   success: boolean;
@@ -41,9 +47,11 @@ export async function runDiscovery(opts: {
   interactive?: boolean;
   /** auto-approve risky actions during discovery (non-interactive demos) */
   autoApproveRisky?: boolean;
+  /** decision-maker override (tests); defaults to the NVIDIA-hosted LLM */
+  llm?: DecisionMaker;
 }): Promise<DiscoveryResult> {
   const { goal, entryUrl, params, outputs, surface, logger, policy } = opts;
-  const llm = new LlmClient();
+  const llm = opts.llm ?? new LlmClient();
   const trace: TraceStep[] = [];
   const extracts: DiscoveryResult["extracts"] = [];
   const history: string[] = [];

@@ -17,3 +17,7 @@ Each directory is one run: `run.jsonl` (structured log of every observation, dec
 | `replay-2026-08-13T23-56-13` | **Escalation with a real human operator** (not scripted): intervention raised, human operated the live session (23 recorded navigations, account created manually), hand-back, resumed → `escalated / completed_by_human`. No outputs extracted because the operator left the confirmation screen before handing back — the engine reports only what it can verify |
 | `replay-2026-08-13T22-12-21` | **Catalog invocation** (`POST /capabilities/lookup-member-balance/invoke`) → `success` — see `catalog-demo.md` |
 | `replay-2026-08-13T22-12-24` | Catalog invocation with bad input → `MEMBER_NOT_FOUND` propagated to the caller — see `catalog-demo.md` |
+| `replay-2026-08-14T00-28-16` | **Session expiry → restart recovery**: expiry injected mid-flow, `recoverable` detected, one restart re-authenticates, run completes `success` |
+| `replay-2026-08-14T00-28-25` | Injected 4s slow load absorbed within explicit waits → `success` with no retry needed |
+| `replay-2026-08-14T00-28-48` | **Escalation abandoned**: operator chooses "Abandon run" instead of completing the risky step → `escalated / abandoned`, no outputs claimed |
+| `replay-2026-08-14T00-28-55` | **UI-drift fallback**: fixture artifact with a stale primary locator (renamed label) → fallback candidate resolves, run succeeds, exactly one `locator_fallback` drift warning logged |

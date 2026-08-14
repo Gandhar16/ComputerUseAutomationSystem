@@ -23,11 +23,18 @@ async function main() {
   await surface.start();
   const escalation = new EscalationManager(gate, logger, surface.page);
 
-  // scripted human operator
+  // scripted human operator; --abandon simulates an operator who cannot
+  // resolve the situation and abandons the run instead of completing the step
+  const abandon = process.argv.includes("--abandon");
   const human = (async () => {
     while (gate.current !== "HUMAN") await new Promise((r) => setTimeout(r, 300));
     console.log("  [scripted-human] taking over the live session…");
     await new Promise((r) => setTimeout(r, 1000));
+    if (abandon) {
+      console.log("  [scripted-human] cannot resolve — abandoning the run");
+      await fetch("http://localhost:4600/abandon", { method: "POST" });
+      return;
+    }
     await surface.page.getByRole("button", { name: "Create Account" }).click();
     await surface.page.waitForLoadState("domcontentloaded");
     console.log("  [scripted-human] risky step performed; handing control back");

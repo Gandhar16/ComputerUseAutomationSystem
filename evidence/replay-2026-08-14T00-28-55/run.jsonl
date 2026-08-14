@@ -1,0 +1,11 @@
+{"ts":"2026-08-14T00:28:55.731Z","event":"replay.start","capability":"lookup-member-balance-drifted","version":1,"params":{"memberId":"34567"}}
+{"ts":"2026-08-14T00:28:55.854Z","event":"replay.step","stepIndex":0,"verb":"navigate","description":"Navigate to http://localhost:4173/login","note":"checkpoint ok"}
+{"ts":"2026-08-14T00:28:55.904Z","event":"replay.step","stepIndex":1,"verb":"type","description":"Type into 'Operator ID:' (textbox) (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-14T00:28:55.936Z","event":"replay.step","stepIndex":2,"verb":"type","description":"Type into 'Password:' (textbox) (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-14T00:28:56.188Z","event":"replay.step","stepIndex":3,"verb":"click","description":"Click 'Sign On' (button)","note":"checkpoint ok"}
+{"ts":"2026-08-14T00:28:56.301Z","event":"replay.step","stepIndex":4,"verb":"click","description":"Click 'Member Search' (link)","note":"checkpoint ok"}
+{"ts":"2026-08-14T00:28:57.812Z","event":"replay.locator_fallback","stepIndex":5,"target":"'Member Number:' (textbox)","used":"attr","primary":"tdlabel","note":"primary locator did not resolve — possible UI drift; review artifact"}
+{"ts":"2026-08-14T00:28:59.343Z","event":"replay.step","stepIndex":5,"verb":"type","description":"Type into 'Member Number:' (textbox)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-14T00:28:59.436Z","event":"replay.step","stepIndex":6,"verb":"click","description":"Click 'Search' (button)","note":"checkpoint ok"}
+{"ts":"2026-08-14T00:28:59.553Z","event":"replay.step","stepIndex":7,"verb":"click","description":"Click 'View' (link)","note":"checkpoint ok"}
+{"ts":"2026-08-14T00:29:01.117Z","event":"replay.success","outputs":{"savingsBalance":"$18,204.66"}}

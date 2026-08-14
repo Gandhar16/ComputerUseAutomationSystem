@@ -36,8 +36,12 @@ export class EscalationManager {
     private page: Page,
   ) {}
 
+  /** set when the operator chooses "abandon" instead of completing the step */
+  private abandoned = false;
+
   async escalate(req: InterventionRequest): Promise<"completed_by_human" | "abandoned"> {
     this.logger.log("intervention.raised", { ...req });
+    this.abandoned = false;
     this.gate.escalate();
     await this.installHumanActionCapture();
 
@@ -50,11 +54,12 @@ export class EscalationManager {
 
     await this.gate.waitForHandBack();
     server.close();
-    this.logger.log("intervention.handback", {});
+    const resolution = this.abandoned ? "abandoned" as const : "completed_by_human" as const;
+    this.logger.log("intervention.handback", { resolution });
     await this.page.waitForLoadState("domcontentloaded").catch(() => {});
     this.gate.resumed();
-    this.logger.log("intervention.resumed", { url: this.page.url() });
-    return "completed_by_human";
+    this.logger.log("intervention.resumed", { url: this.page.url(), resolution });
+    return resolution;
   }
 
   /** Record what the human does in the live session while they hold control. */
@@ -114,7 +119,8 @@ img{max-width:100%;border:1px solid #ccc}button{font-size:1rem;padding:.5rem 1.2
 <dt>Control state</dt><dd>HUMAN — you own the live session. Automation is locked out until you hand back.</dd>
 </dl>
 <p>Complete the step in the automation browser window, then:</p>
-<form method="post" action="/handback"><button>✅ Hand control back to automation</button></form>
+<form method="post" action="/handback" style="display:inline"><button>✅ Hand control back to automation</button></form>
+<form method="post" action="/abandon" style="display:inline;margin-left:.6rem"><button style="background:#a33">✖ Abandon run (could not resolve)</button></form>
 <h3>Screen at escalation</h3><img src="/screenshot" alt="screenshot at escalation">
 </body></html>`);
     });
@@ -124,6 +130,11 @@ img{max-width:100%;border:1px solid #ccc}button{font-size:1rem;padding:.5rem 1.2
     });
     app.post("/handback", (_q, res) => {
       res.send(`<body style="font-family:system-ui;margin:2rem"><h3>Control returned to automation. You can close this tab.</h3></body>`);
+      this.gate.handBack();
+    });
+    app.post("/abandon", (_q, res) => {
+      res.send(`<body style="font-family:system-ui;margin:2rem"><h3>Run abandoned. The result will report escalated/abandoned.</h3></body>`);
+      this.abandoned = true;
       this.gate.handBack();
     });
     return new Promise((resolve) => {

@@ -7,7 +7,7 @@ import { PlaywrightWebSurface } from "../surface/playwright.js";
 import { RunLogger } from "../evidence/logger.js";
 import { replay } from "../replay/engine.js";
 
-const PORT = 4700;
+const DEFAULT_PORT = 4700;
 
 /**
  * Agent-facing capability catalog (stretch goal).
@@ -44,7 +44,7 @@ function describe(a: CapabilityArtifact) {
   };
 }
 
-export function startCatalog(): void {
+export function startCatalog(port = DEFAULT_PORT): Promise<import("node:http").Server> {
   const app = express();
   app.use(express.json());
 
@@ -93,9 +93,13 @@ export function startCatalog(): void {
     }
   });
 
-  app.listen(PORT, () => {
-    console.log(`Capability catalog listening on http://localhost:${PORT}`);
-    console.log(`  GET  /capabilities                — discover callable capabilities (typed contracts)`);
-    console.log(`  POST /capabilities/:id/invoke     — invoke with {"params": {...}} (deterministic replay)`);
+  return new Promise((resolve, reject) => {
+    const server = app.listen(port, () => {
+      console.log(`Capability catalog listening on http://localhost:${port}`);
+      console.log(`  GET  /capabilities                — discover callable capabilities (typed contracts)`);
+      console.log(`  POST /capabilities/:id/invoke     — invoke with {"params": {...}} (deterministic replay)`);
+      resolve(server);
+    });
+    server.on("error", reject);
   });
 }
