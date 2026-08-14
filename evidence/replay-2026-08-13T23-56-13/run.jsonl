@@ -1,0 +1,40 @@
+{"ts":"2026-08-13T23:56:15.886Z","event":"replay.start","capability":"open-subaccount","version":1,"params":{"memberId":"12345","accountType":"Money Market","nickname":"Rainy Day","deposit":"120"}}
+{"ts":"2026-08-13T23:56:16.095Z","event":"replay.step","stepIndex":0,"verb":"navigate","description":"Navigate to http://localhost:4173/login","note":"checkpoint ok"}
+{"ts":"2026-08-13T23:56:16.145Z","event":"replay.step","stepIndex":1,"verb":"type","description":"Type into 'Operator ID:' (textbox) (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T23:56:16.178Z","event":"replay.step","stepIndex":2,"verb":"type","description":"Type into 'Password:' (textbox) (sensitive)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T23:56:16.607Z","event":"replay.step","stepIndex":3,"verb":"click","description":"Click 'Sign On' (button)","note":"checkpoint ok"}
+{"ts":"2026-08-13T23:56:16.946Z","event":"replay.step","stepIndex":4,"verb":"click","description":"Click 'Member Search' (link)","note":"checkpoint ok"}
+{"ts":"2026-08-13T23:56:16.981Z","event":"replay.step","stepIndex":5,"verb":"type","description":"Type into 'Member Number:' (textbox)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T23:56:17.088Z","event":"replay.step","stepIndex":6,"verb":"click","description":"Click 'Search' (button)","note":"checkpoint ok"}
+{"ts":"2026-08-13T23:56:17.221Z","event":"replay.step","stepIndex":7,"verb":"click","description":"Click 'View' (link)","note":"checkpoint ok"}
+{"ts":"2026-08-13T23:56:17.358Z","event":"replay.step","stepIndex":8,"verb":"click","description":"Click 'Open New Sub-Account' (link)","note":"checkpoint ok"}
+{"ts":"2026-08-13T23:56:17.393Z","event":"replay.step","stepIndex":9,"verb":"select","description":"Select \"Holiday Club\" in 'Account Type:' (combobox)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T23:56:17.435Z","event":"replay.step","stepIndex":10,"verb":"type","description":"Type into 'Nickname:' (textbox)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T23:56:17.465Z","event":"replay.step","stepIndex":11,"verb":"type","description":"Type into 'Initial Deposit ($):' (textbox)","note":"ok (no checkpoint)"}
+{"ts":"2026-08-13T23:56:17.580Z","event":"replay.step","stepIndex":12,"verb":"click","description":"Click 'Continue' (button)","note":"checkpoint ok"}
+{"ts":"2026-08-13T23:56:17.666Z","event":"intervention.raised","capabilityId":"open-subaccount","goal":"Sign on, look up member 23456, open a new Holiday Club sub-account with nickname 'Vacation Fund' and initial deposit 50, confirm it, and read the new account number","stepIndex":13,"stepDescription":"Click 'Create Account' (button)","reason":"Risky step requires human approval (artifact is 'draft', not 'approved'): Click 'Create Account' (button)","screenshot":"evidence\\replay-2026-08-13T23-56-13\\01-step13-escalate.png"}
+{"ts":"2026-08-14T00:06:51.919Z","event":"human.navigation","url":"http://localhost:4173/member/12345/subaccount/confirm"}
+{"ts":"2026-08-14T00:06:53.661Z","event":"human.navigation","url":"http://localhost:4173/member/12345"}
+{"ts":"2026-08-14T00:06:57.081Z","event":"human.navigation","url":"http://localhost:4173/member/12345/subaccount/new"}
+{"ts":"2026-08-14T00:07:09.274Z","event":"human.navigation","url":"http://localhost:4173/member/12345/subaccount/confirm"}
+{"ts":"2026-08-14T00:07:10.932Z","event":"human.navigation","url":"http://localhost:4173/member/12345/subaccount/confirm"}
+{"ts":"2026-08-14T00:07:12.758Z","event":"human.navigation","url":"http://localhost:4173/member/12345"}
+{"ts":"2026-08-14T00:07:13.839Z","event":"human.navigation","url":"http://localhost:4173/members"}
+{"ts":"2026-08-14T00:07:15.679Z","event":"human.navigation","url":"http://localhost:4173/"}
+{"ts":"2026-08-14T00:07:16.644Z","event":"human.navigation","url":"http://localhost:4173/members"}
+{"ts":"2026-08-14T00:07:18.189Z","event":"human.navigation","url":"http://localhost:4173/reports"}
+{"ts":"2026-08-14T00:07:19.779Z","event":"human.navigation","url":"http://localhost:4173/members"}
+{"ts":"2026-08-14T00:07:23.764Z","event":"human.navigation","url":"http://localhost:4173/members/search"}
+{"ts":"2026-08-14T00:07:25.793Z","event":"human.navigation","url":"http://localhost:4173/members"}
+{"ts":"2026-08-14T00:07:28.053Z","event":"human.navigation","url":"http://localhost:4173/members/search"}
+{"ts":"2026-08-14T00:07:36.529Z","event":"human.navigation","url":"http://localhost:4173/members"}
+{"ts":"2026-08-14T00:07:40.806Z","event":"human.navigation","url":"http://localhost:4173/members/search"}
+{"ts":"2026-08-14T00:07:44.847Z","event":"human.navigation","url":"http://localhost:4173/members"}
+{"ts":"2026-08-14T00:08:19.713Z","event":"human.navigation","url":"http://localhost:4173/"}
+{"ts":"2026-08-14T00:08:21.692Z","event":"human.navigation","url":"http://localhost:4173/members"}
+{"ts":"2026-08-14T00:08:23.774Z","event":"human.navigation","url":"http://localhost:4173/members"}
+{"ts":"2026-08-14T00:08:26.472Z","event":"human.navigation","url":"http://localhost:4173/reports"}
+{"ts":"2026-08-14T00:08:30.768Z","event":"human.navigation","url":"http://localhost:4173/reports"}
+{"ts":"2026-08-14T00:08:31.885Z","event":"human.navigation","url":"http://localhost:4173/members"}
+{"ts":"2026-08-14T00:10:07.707Z","event":"intervention.handback"}
+{"ts":"2026-08-14T00:10:07.708Z","event":"intervention.resumed","url":"http://localhost:4173/members"}
